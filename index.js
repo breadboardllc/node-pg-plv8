@@ -55,13 +55,13 @@ module.exports = class PLV8 {
       })
     })
     .then(code => {
-      return this.knex('v8.modules').select('*').where({ name: moduleName })
+      return this.pg.query('SELECT * FROM v8.modules WHERE name = $1', [moduleName])
         .then(result => {
           if (result.length > 0) {
-            return this.knex('v8.modules').update({ code }).where({ name: moduleName })
+            return this.pg.query('UPDATE v8.modules SET code = $1 WHERE name = $2', [code, moduleName]);
           }
           else {
-            return this.knex('v8.modules').insert({ code, name: moduleName })
+            return this.pg.query('INSERT INTO v8.modules (code, name) VALUES ($1, $2)', [code, moduleName]);
           }
         })
     })
@@ -70,8 +70,7 @@ module.exports = class PLV8 {
 
   uninstall (moduleId) {
     const name = moduleId.replace(/^@\w+\//, '')
-    return this.knex('v8.modules').where({ name }).del()
-      .then(() => true)
+    return this.pg.query('DELETE FROM v8.modules WHERE name = $1', [name]).then(() => true)
   }
 
   eval (f, compact = true) {
@@ -100,7 +99,7 @@ module.exports = class PLV8 {
     }
     const code = es5.code.slice(0, -1)
 
-    return this.knex.raw('select v8.eval(?) as val', [ `${code}()` ])
+    return this.pg.query('select v8.eval($1) as val', [ `${code}()` ])
       .then(({ rows: [ result ] }) => {
         const val = result && result.val
         if (val && val.error === true) {
@@ -115,39 +114,37 @@ module.exports = class PLV8 {
   }
 
   init () {
-    return this.knex('pg_catalog.pg_namespace').select().where({ nspname: 'v8' })
-      .then(([ schema ]) => {
+    return this.pg.query("SELECT * FROM pg_catalog.pg_namespace WHERE nspname = 'v8'")
+      .then( (schema) => {
         if (schema) {
-          return
+          return;
         }
         else {
-          return this.knex.raw('create schema if not exists "v8"')
+          return this.pg.query('create schema if not exists "v8"')
         }
       })
       .then(() => {
-        return this.knex('pg_available_extensions').select().where({ name: 'plv8' })
-          .then(([ ext ]) => {
-            if (ext.installed_version) {
+        var query = this.pg.query("SELECT * FROM pg_available_extensions WHERE name = 'plv8'");
+        var result = query.then((result) => {
+            const ext = result.rows[0];
+            if (ext && ext.installed_version) {
               return
             }
             else {
-              return this.knex.raw('create extension if not exists plv8')
+              return this.pg.query("create extension if not exists plv8");
             }
-          })
+          });
+          return result;
       })
       .then(() => {
-        return this.knex.schema.createTableIfNotExists('v8.modules', table => {
-          table.increments()
-          table.text('name')
-          table.text('code')
-        })
+        return this.pg.query("CREATE TABLE IF NOT EXISTS v8.modules (id SERIAL, name text, code text)");
       })
       .then(() => {
-        return bootstrapPlv8(this.knex)
+        return bootstrapPlv8(this.pg)
       })
   }
 
-  constructor (knex) {
-    this.knex = knex
+  constructor (pg) {
+    this.pg = pg;
   }
 }

@@ -1,17 +1,20 @@
 const assert = require('assert')
-const knex = require('knex')
 const PLV8 = require('../')
 
+const pg = require("pg");
+const Pool = pg.Pool;
+
 describe('plv8', () => {
-  const plv8 = new PLV8(knex({
-    client: 'pg',
-    connection: {
-      host: process.env.PLV8_HOST,
-      user: process.env.PLV8_USER,
-      password: process.env.PLV8_PASSWORD,
-      database: process.env.PLV8_DATABASE
-    }
-  }))
+  const plv8 = new PLV8(new Pool({
+    "user": "postgres",
+    "host": "localhost",
+    "port": 5433,
+    "database": "terramango",
+    "ssl": false,
+    "max": 2,
+    "min": 1,
+    "idleTimeoutMillis": 1000
+  }));
   describe('#install', () => {
     it('should install a module', () => {
       return plv8.install({
