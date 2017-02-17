@@ -1,9 +1,6 @@
 # node-pg-plv8
 
 [![NPM version][npm-image]][npm-url]
-[![Build status][ci-image]][ci-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
-[![Code Climate][codeclimate-image]][codeclimate-url]
 
 Use node modules in [PLV8](https://github.com/plv8/plv8). Optimize your Node.js Backend by offloading work directly onto the database (PostgreSQL).
 
