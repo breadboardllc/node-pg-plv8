@@ -8,8 +8,8 @@ describe('plv8', () => {
   const plv8 = new PLV8(new Pool({
     "user": "postgres",
     "host": "localhost",
-    "port": 5433,
-    "database": "terramango",
+    "port": 5432,
+    "database": "postgres",
     "ssl": false,
     "max": 2,
     "min": 1,
