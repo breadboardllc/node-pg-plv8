@@ -1,7 +1,7 @@
 {
-  "name": "plv8",
+  "name": "pg-plv8",
   "description": "require() node.js modules in plv8",
-  "version": "2.0.7",
+  "version": "1.0.0",
   "keywords": [
     "postgres",
     "postgresql",
@@ -14,7 +14,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/langateam/plv8.git"
+    "url": "git://github.com/breadboardllc/node-pg-plv8.git"
   },
   "author": "Langa Team <hello@langa.io>",
   "contributors": [
@@ -25,6 +25,10 @@
     {
       "name": "Travis Webb",
       "email": "tjwebb@langa.io"
+    },
+    {
+      "name": "David Murdoch",
+      "email": "david@breadboard.ai"
     }
   ],
   "scripts": {
@@ -47,7 +51,6 @@
     "chai": "^2.0.0",
     "eslint": "^3.0.1",
     "eslint-config-trails": "^1.0.7",
-    "knex": "^0.11.7",
     "mocha": "^2.1.0",
     "pg": "^6.0.1"
   },
