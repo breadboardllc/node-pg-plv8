@@ -55,5 +55,5 @@ MIT
 ## Maintained By
 [<img src='https://i.imgur.com/yxS6uLe.png' height='64px'>breadboard](https://breadboard.ai)
 
-[npm-image]: https://img.shields.io/npm/v/plv8.svg?style=flat-square
+[npm-image]: https://img.shields.io/npm/v/pg-plv8.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/pg-plv8
