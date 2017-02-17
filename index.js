@@ -57,7 +57,7 @@ module.exports = class PLV8 {
     .then(code => {
       return this.pg.query('SELECT * FROM v8.modules WHERE name = $1', [moduleName])
         .then(result => {
-          if (result.length > 0) {
+          if (result.rows.length > 0) {
             return this.pg.query('UPDATE v8.modules SET code = $1 WHERE name = $2', [code, moduleName]);
           }
           else {
