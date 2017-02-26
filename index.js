@@ -74,11 +74,15 @@ module.exports = class PLV8 {
   }
 
   eval (f, compact = true) {
+    return this.ap(f, null, compact)
+  }
+  ap (f, args, compact = true) {
     let es5
+    const jsonArgs = JSON.stringify(args)
     const template = `
       (function () {
         try {
-          return (${f.toString()})()
+          return (${f.toString()})(${jsonArgs})
         }
         catch (e) {
           return {
